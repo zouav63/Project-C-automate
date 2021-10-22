@@ -9,6 +9,11 @@ struct alphabet{
     char c1[1];
 };
 
+struct arr {
+    int arr[50][50];
+};
+
+
 bool appartient(char str[], struct alphabet alphabet){
     for(int i=0; i<strlen(str); i++){
         if(str[i]!=*alphabet.a1 && str[i]!=*alphabet.b1 && str[i]!=*alphabet.c1){
@@ -53,6 +58,27 @@ char* miroir(char m[]){
     result=a;
     return result;
 }
+
+
+// char* transform(char L[]){
+//     // (aaa*b)*(ab+b)b*
+//     // a+a(b+a)*b = a + ab*b + aa*b
+//     int i=0;
+//     while(i!=strlen(L)){
+//         if(L[i]=='('){
+//             int a=0;
+//             while(L[a]!=')'){
+//                 if(L[a+1]=='*'){
+//                     break;
+//                 }else{
+                    
+//                 }
+//             }
+//         }
+//         i++;
+//     }
+// }
+
 bool appartientAutomate(char str[], char L[]){
     int a=0; // Permet d'indexer le str
     int i=0; // Permet d'indexer le Langage (L)
@@ -66,11 +92,36 @@ bool appartientAutomate(char str[], char L[]){
                     a++;
                 }
                 i++;
+            }else if(L[i+1]=='('){
+                /* code */
+                int j=i+2;
+                while(L[j]!=')'){
+                    //code
+                }
             }
             i++;
         }
     }
     return true;
+}
+
+struct arr transform(char str[]){
+    struct arr L;
+    char lang[100]="\0";
+    int j=0;
+    int num=0;
+    for (int i = 0; i <= strlen(str); i++){
+        if(str[i]=='+' | i==strlen(str)){
+            strcpy(L.arr[num],lang);
+            memset(lang, 0, strlen(lang));
+            strcpy(lang,"\0");
+            j=0; num++;
+        }else{
+            lang[j]=str[i];
+            j++;
+        }
+    }
+    return L;
 }
 
 // Bien comprendre les pointeurs (assignation de l'addresse mémoire)
@@ -87,16 +138,19 @@ int main(int argc, char *argv[]){
 
     //1er étape, mise en jambe
     struct alphabet alphabet={"a","b","c"};
-    printf("%d\n", appartient("abc", alphabet)); 
-    printf("%s\n", puis("abc",3));
-    printf("%s\n", miroir("hello"));
-    printf("%d\n", vide("abc"));
-    printf("%d\n", estFini("abc"));
-
+    // printf("%d\n", appartient("abc", alphabet)); 
+    // printf("%s\n", puis("abc",3));
+    // printf("%s\n", miroir("hello"));
+    // printf("%d\n", vide("abc"));
+    // printf("%d\n", estFini("abc"));
     //2eme étape 
-    char L[] = "abb*a*"; // Equation de l'automate -> peut être traduit shématiquement 
+    char L[] = "aaa*b*ab+bb*"; // Equation de l'automate -> peut être traduit shématiquement 
     char str[]="ab";
-    printf("%d\n",appartientAutomate(str, L));
+    // printf("%d\n",appartientAutomate(str, L));
+    struct arr Lang=transform(L);
+    printf("lol%s\n", Lang.arr[0]);
+    printf("lool%s\n", Lang.arr[1]);
+
     return 0;
 }
 
