@@ -64,7 +64,7 @@ int main(int argc, char *argv[]){
             printf("%s\n", res);
         }
         printf("%c", ch);
-        printf("%s", copy);
+        // printf("%s", copy);
         // if(read==true && ch!='{'){
         //     strcat(res,copy);
         //     printf("%c: %s\n", copy, res);

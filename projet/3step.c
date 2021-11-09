@@ -88,7 +88,6 @@ int main(int argc, char *argv[]){
 // Compilation avec un pc ayant un noyau Unix : 
 // gcc -Wall -o nom_du_fichier_objet  -c nom_du_fichier_source_C
 
-
 //Fonctionne mais ne retourne rien, je préfère qu'elle retourne qlq chose (ne retourne pas parce que on copie la string transformé et est directement mémoirisé car pointeur )
 // void puis(char* string[], int m){
 //     char string1[100]="";
