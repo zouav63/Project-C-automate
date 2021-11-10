@@ -9,6 +9,15 @@ struct relation{
     char res[10];
 };
 
+struct AEF{
+    char **X;
+    char **Q;
+    char *I;
+    char **F;
+    struct relation *R;
+};
+
+
 int main(int argc, char *argv[]){
     char ch,file_name[30]="../AEF.txt";
     FILE *fp;
@@ -18,7 +27,7 @@ int main(int argc, char *argv[]){
       exit(EXIT_FAILURE);
    }
 
-
+    // Déclaration des variables 
     char **X;
     X = malloc(sizeof(char)*10*10);
     char **Q;
@@ -26,24 +35,16 @@ int main(int argc, char *argv[]){
     char *I;
     char **F;
     F = malloc(sizeof(int)*10*10);
-
-    // à revoir 
-
-    // struct relation R;
-    // strcpy( R.etat, "Sara" );
-    // printf("%s\n", R.etat);
-    // struct relation **R;
-    // R = malloc(sizeof(int)*10*10);
-    // strcpy(R[0]->etat, "Sara" );
-    // printf("%s\n", R[0]->etat);
-    return 0;
+    struct relation *R;
+    R = malloc(sizeof(int)*10);
     char *res;
     res = malloc(sizeof(int)*10);
-
     char curr='\0';
     bool read = false;
-
     int count=0, countR=0;
+
+    // Mode read permet de concataner tous les charactères courants 
+    // read=false qand les charactères ne nous intéressent pas
 
     while((ch = fgetc(fp)) != EOF){
         if(ch=='X'){
@@ -67,13 +68,10 @@ int main(int argc, char *argv[]){
             curr = 'F';
             read=false;
         }
-
         if(ch==',' | ch==')' | ch=='}'){
             read=false;
             memset(res, 0, strlen(res));
         }
-        // printf("%c", ch);
-
         if(read==true && ch!='{'){
             char copy[2]={ch, '\0'};
             strcat(res,copy);
@@ -88,20 +86,22 @@ int main(int argc, char *argv[]){
             }else if(curr=='F'  && strlen(res)==2){
                 F[count]=res;
                 count++;
-            }else if(curr=='R'){
-                if(res!="q" || strlen(res)==2){
+            }else if(curr == 'R'){
+                if(res[0] != 'q' || strlen(res)==2){
                     if(countR==0){
-
+                        strcpy(R[count].etat,res);
+                        countR++;
                     }else if(countR==1){
-
+                        strcpy(R[count].gram,res);
+                        countR++;
                     }else if(countR==2){
+                        strcpy(R[count].res,res);
                         countR=0;
+                        count++;
                     }
                 }  
-                countR++;
             }
         }
-
         if(ch=='(' | ch=='{' | ch==',' | ch=='\0' | ch==' ' | ch == '='){
             memset(res, 0, strlen(res));
             read=true;
