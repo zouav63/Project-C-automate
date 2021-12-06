@@ -3,7 +3,11 @@ Q={q0,q1,q2,q3}
 I=q0
 R(q0,a)=q3
 R(q0,b)=q1
-R(q1,a)=q
+R(q1,a)=q1
 R(q1,b)=q2
 R(q3,a)=q3
-F={q2, q3}
+F={q2,q3}
+
+
+Hello Michael, je suis en semaine de cours, mais je voulais savoir si t'étais dispo pour une réunion prévu mardi 23 novembre à 11h avec mon école. 
+L'idée de cette réunion, c'est d'avoir un premier contact entre école et le tuteur. 

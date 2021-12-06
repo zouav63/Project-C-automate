@@ -9,6 +9,14 @@ struct relation{
     char res[10];
 };
 
+struct AEF{
+    char **X;
+    char **Q;
+    char *I;
+    char **F;
+    struct relation *R;
+};
+
 int main(int argc, char *argv[]){
     char ch,file_name[30]="../AEF.txt";
     FILE *fp;
@@ -17,34 +25,25 @@ int main(int argc, char *argv[]){
       perror("Error while opening the file.\n");
       exit(EXIT_FAILURE);
    }
-
-
-    char **X;
-    X = malloc(sizeof(char)*10*10);
+   
+    // Déclaration des variables 
+    char *X[10];
+    // X = malloc(sizeof(char)*10*10);
     char **Q;
     Q = malloc(sizeof(int)*10*10);
     char *I;
     char **F;
     F = malloc(sizeof(int)*10*10);
-
-    // à revoir 
-
-    // struct relation R;
-    // strcpy( R.etat, "Sara" );
-    // printf("%s\n", R.etat);
-    // struct relation **R;
-    // R = malloc(sizeof(int)*10*10);
-    // strcpy(R[0]->etat, "Sara" );
-    // printf("%s\n", R[0]->etat);
-    return 0;
+    struct relation *R;
+    R = malloc(sizeof(int)*10);
     char *res;
     res = malloc(sizeof(int)*10);
-
     char curr='\0';
     bool read = false;
-
     int count=0, countR=0;
 
+    // Mode read permet de concataner tous les charactères courants 
+    // read=false qand
     while((ch = fgetc(fp)) != EOF){
         if(ch=='X'){
             count=0;
@@ -72,33 +71,36 @@ int main(int argc, char *argv[]){
             read=false;
             memset(res, 0, strlen(res));
         }
-        // printf("%c", ch);
 
         if(read==true && ch!='{'){
             char copy[2]={ch, '\0'};
             strcat(res,copy);
             if(curr=='X'){
-                X[count]=res;
+                strcat(X[count],res);
+                printf("%s", X[count]);
                 count++;
             }else if(curr=='Q' && strlen(res)==2){
-                Q[count]=res;
+                strcat(Q[count],res);
                 count++;
             }else if(curr=='I'  && strlen(res)==2){
                 I=res;
             }else if(curr=='F'  && strlen(res)==2){
-                F[count]=res;
+                strcat(F[count],res);
                 count++;
-            }else if(curr=='R'){
-                if(res!="q" || strlen(res)==2){
+            }else if(curr == 'R'){
+                if(res[0] != 'q' || strlen(res)==2){
                     if(countR==0){
-
+                        strcpy(R[count].etat,res);
+                        countR++;
                     }else if(countR==1){
-
+                        strcpy(R[count].gram,res);
+                        countR++;
                     }else if(countR==2){
+                        strcpy(R[count].res,res);
                         countR=0;
+                        count++;
                     }
                 }  
-                countR++;
             }
         }
 

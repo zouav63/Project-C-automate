@@ -56,35 +56,6 @@ char* miroir(char m[]){
     return result;
 }
 
-bool appartientAutomate(char str[], char L[]){
-    int a=0; // Permet d'indexer le str
-    int i=0; // Permet d'indexer le Langage (L)
-    while (a!=strlen(str)){
-        if(str[a]!=L[i] && str[a]!='('){
-            return false;
-        }else{
-            a++;
-            if(L[i+1]=='*'){
-                while(str[a]==L[i]){
-                    a++;
-                }
-                i++;
-            }else if(L[i+1]=='('){
-                /* code */
-                i+=2;
-                int j=i;
-                char res[100]="";
-                while(L[i]!=')'){
-                    //code
-
-                }
-            }
-            i++;
-        }
-    }
-    return true;
-}
-
 int main(int argc, char *argv[]){
     //   1er étape, mise en jambe
     struct alphabet alphabet={"a","b","c"};
