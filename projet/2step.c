@@ -4,18 +4,77 @@
 #include <string.h>
 
 struct relation{
-    char etat[10];
-    char gram[2];
-    char res[10];
+    int source; // etat source
+    char gram[2]; // grammaire de la transition
+    int dest; // etat de destination
 };
 
+
 struct AEF{
-    char **X;
-    char **Q;
-    char *I;
-    char **F;
+    char *X;
+    int *Q;
+    int *I;
+    int *F;
     struct relation *R;
 };
+
+bool AEFcomplet(struct AEF aef){
+    printf("%d", sizeof aef.X);
+    // for (int i = 0; i < sizeof aef.R; i++){
+    //     for (int j = 0; j < sizeof aef.X; j++){
+    //         if(aef.R[i].source != ){
+
+    //     }
+
+    //     }
+    // }
+}
+
+bool appartientAEF(struct AEF aef, char string[]){
+    int currState=aef.I;
+    int a=0; // in string
+    while(a != strlen(string)){
+        int check=a;
+        for (int i = 0; i < sizeof aef.R; i++){
+            if(aef.R[i].gram[0]==string[a] && aef.R[i].source==currState){
+                currState=aef.R[i].dest;
+                a++;
+                for (int j = 0; j < sizeof aef.F; j++){
+                if(currState==aef.F[j]){
+                    if (a==strlen(string)){
+                        return true;
+                        }
+                    } 
+                }
+                
+                
+            }
+        } 
+        return false;       
+    }
+}
+
+void afficherAEF(struct AEF aef){
+    printf("X={");
+    for(int i=0; i<sizeof aef.X;i++){
+        if ((char)aef.X[i]!=NULL){
+            printf("%c,", aef.X[i]);
+        }        
+    }
+    printf("}\n");
+    printf("Q={");
+    for(int i=0; i<sizeof aef.Q;i++){
+        if ((int)aef.Q[i]!=NULL){
+            printf("%d,", aef.Q[i]);
+        }        
+    }
+    printf("}\n");
+    printf("I=%d\n",aef.I);
+    for(int i=0; i<sizeof aef.R;i++){
+        printf("R(%d,%s)=%d\n", aef.R[i].source,aef.R[i].gram, aef.R[i].dest);
+    }
+}
+
 
 int main(int argc, char *argv[]){
     char ch,file_name[30]="../AEF.txt";
@@ -25,27 +84,25 @@ int main(int argc, char *argv[]){
       perror("Error while opening the file.\n");
       exit(EXIT_FAILURE);
    }
-   
-    // Déclaration des variables 
-    char *X[10];
-    // X = malloc(sizeof(char)*10*10);
-    char **Q;
-    Q = malloc(sizeof(int)*10*10);
-    char *I;
-    char **F;
-    F = malloc(sizeof(int)*10*10);
-    struct relation *R;
-    R = malloc(sizeof(int)*10);
+    
+    struct AEF aef;
+    aef.X=malloc(sizeof(char)*30);
+    aef.Q=malloc(sizeof(int)*30);
+    aef.I=malloc(sizeof(int)*5);
+    aef.F=malloc(sizeof(int)*10);
+    aef.R=malloc(sizeof(struct relation)*4);
+
     char *res;
     res = malloc(sizeof(int)*10);
     char curr='\0';
     bool read = false;
     int count=0, countR=0;
-
+    int test=0;
     // Mode read permet de concataner tous les charactères courants 
     // read=false qand
-    while((ch = fgetc(fp)) != EOF){
+     while((ch = fgetc(fp)) != EOF){
         if(ch=='X'){
+            strcpy(aef.X, "");
             count=0;
             curr = 'X';
             read=false;
@@ -58,7 +115,7 @@ int main(int argc, char *argv[]){
             curr = 'I';
             read=false;
         }else if(ch=='R'){
-            count=0;
+            int count=0;
             curr = 'R';
             read=false;
         }else if(ch=='F'){
@@ -76,38 +133,40 @@ int main(int argc, char *argv[]){
             char copy[2]={ch, '\0'};
             strcat(res,copy);
             if(curr=='X'){
-                strcat(X[count],res);
-                printf("%s", X[count]);
+                strcat(aef.X,res);
                 count++;
-            }else if(curr=='Q' && strlen(res)==2){
-                strcat(Q[count],res);
+            }
+            else if(curr=='Q'){
+                aef.Q[count]=atoi(res);
                 count++;
-            }else if(curr=='I'  && strlen(res)==2){
-                I=res;
-            }else if(curr=='F'  && strlen(res)==2){
-                strcat(F[count],res);
+            }else if(curr=='I'){
+                aef.I=atoi(res);
+            }else if(curr=='F'){
+                aef.F[count]=atoi(res);
                 count++;
             }else if(curr == 'R'){
-                if(res[0] != 'q' || strlen(res)==2){
-                    if(countR==0){
-                        strcpy(R[count].etat,res);
-                        countR++;
-                    }else if(countR==1){
-                        strcpy(R[count].gram,res);
-                        countR++;
-                    }else if(countR==2){
-                        strcpy(R[count].res,res);
-                        countR=0;
-                        count++;
-                    }
-                }  
+                if(countR==0){
+                    aef.R[count].source=atoi(res);
+                    countR++;
+                }else if(countR==1){
+                    strcpy(aef.R[count].gram,res);
+                    countR++;
+                }else if(countR==2){
+                    aef.R[count].dest=atoi(res);
+                    countR++;
+                }else if(countR==3){
+                    countR=0;
+                    count++;
+                }
             }
         }
-
         if(ch=='(' | ch=='{' | ch==',' | ch=='\0' | ch==' ' | ch == '='){
             memset(res, 0, strlen(res));
             read=true;
         }
     }
-   fclose(fp);
+    printf("%d\n", appartientAEF(aef, "abbaa"));
+    printf("%d", AEFcomplet(aef));
+    fclose(fp);
+    return 0;
 }

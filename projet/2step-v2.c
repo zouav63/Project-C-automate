@@ -5,16 +5,16 @@
 
 struct relation{
     int source; // etat source
-    char gram; // grammaire de la transition
+    char gram[2]; // grammaire de la transition
     int dest; // etat de destination
 };
 
 struct automate{
     char X[256]; // alphabet
-    int Q[50]; // états 
-    char I[20]; // états initiaux
-    char F[20]; // états finaux 
-    struct relation *R; 
+    int Q[256]; // états 
+    int* I; // états initiaux
+    int F[50]; // états finaux 
+    struct relation R[50]; 
 
     // int nb_states; // nombre d'états
     // int *initial; // les états initiaux
@@ -26,9 +26,11 @@ struct automate{
 void afficherAutomate(struct automate aef){
     printf("X={");
     for (int i = 0; i < sizeof aef.X / sizeof aef.X[0]; i++){
-        printf("%c,\n", aef.X[i]);
+        if(aef.X[i]!=""){
+            printf("%c,\n", aef.X[i]);
+        }
     }
-        
+    printf("}");
 }
 
 int main(int argc, char *argv[]){
@@ -86,51 +88,46 @@ int main(int argc, char *argv[]){
         if(read==true && ch!='{'){
             char copy[2]={ch, '\0'};
             strcat(res,copy);
-            
             if(curr=='X'){
                 strcat(aef.X,res);
-                // aef.X[count]=ch;
-                printf("%s", res);
                 count++;
             }else if(curr=='Q'){
                 aef.Q[count]=atoi(res);
-                // aef.Q[count]=ch;
-                // printf("%s", res);
                 count++;
             }else if(curr=='I'){
-                // strcat(aef.I, res);
-                aef.I[count]=atoi(res);
-                // aef.I[count]=ch;
+                aef.I=atoi(res);
             }else if(curr=='F'){
-                strcat(aef.F, res);
-                // aef.F[count]=ch;
+                aef.F[count]=atoi(res);
                 count++;
+            }else if(curr == 'R'){
+                if(countR==0){
+                    aef.R[count].source=atoi(res);
+                    printf("source: %d\n", aef.R[count].source);
+                    countR++;
+                }else if(countR==1){
+                    strcpy(aef.R[count].gram,res);
+                    printf("gram: %s\n", aef.R[count].gram);
+                    countR++;
+                }else if(countR==2){
+                    aef.R[count].dest=atoi(res);
+                    printf("gram: %d\n", aef.R[count].dest);
+                    countR++;
+                    count++;
+                }else if(countR==3){
+                    countR=0;
+                    printf("\n");
+                }
+                // printf("%d\n", aef.R[0].source);
+                // printf("%c\n", aef.R[0].gram);
+                // printf("%d\n", aef.R[0].dest);
             }
-            // else if(curr == 'R'){
-            //     if(res[0] != 'q' || strlen(res)==2){
-            //         if(countR==0){
-            //             strcpy(aef.R[count].source,res);
-            //             countR++;
-            //         }else if(countR==1){
-            //             strcpy(aef.R[count].gram,res);
-            //             // strcpy(R[count].gram,res);
-            //             countR++;
-            //         }else if(countR==2){
-            //             strcpy(aef.R[count].dest,res);
-            //             // strcpy(R[count].res,res);
-            //             countR=0;
-            //             count++;
-            //         }
-            //     }  
-            // }
         }
         if(ch=='(' | ch=='{' | ch==',' | ch=='\0' | ch==' ' | ch == '='){
             memset(res, 0, strlen(res));
             read=true;
         }
     }
-    printf("%s", aef.X);
-    // fclose(fp);
-    // afficherAutomate(aef);
+    fclose(fp);
+    afficherAutomate(aef);
     return 0;
 }
