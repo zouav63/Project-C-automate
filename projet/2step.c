@@ -19,24 +19,20 @@ struct AEF{
 };
 
 bool AEFcomplet(struct AEF aef){
-    int lenGram=0; int count=0; int nbrel;
-    for (int i = 0; i < sizeof aef.X; i++){       
-        if(aef.X[i]!='\0'){
-            lenGram++;
-        }     
-        for (int j = 0; j < sizeof aef.R; j++){
-            if(strlen(aef.R[j].gram)!=0){
-                nbrel++;
-                if(aef.R[j].gram==aef.X[i]){
-                    count++;
-                }
-            }
-        }
-        if(lenGram!=count){
-            return false;
+    int countQ=0; int nbQ=0; int nbR=0; int nbE=0;
+    for (int i = 0; i < sizeof aef.Q; i++){
+        if(aef.Q[i]!=0 | countQ==0){
+            nbQ++;
+            countQ=1;
         }
     }
-    return true;
+    for (int i = 0; i < sizeof aef.R; i++){
+        if(strlen(aef.R[i].gram)!=0){
+            printf("%s\n",aef.R[i].gram);
+            nbR++;
+        }
+    }
+    printf("%d\n", nbR);
 }
 
 bool appartientAEF(struct AEF aef, char string[]){
