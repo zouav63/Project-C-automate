@@ -19,39 +19,43 @@ struct AEF{
 };
 
 bool AEFcomplet(struct AEF aef){
-    printf("%d", sizeof aef.X);
-    // for (int i = 0; i < sizeof aef.R; i++){
-    //     for (int j = 0; j < sizeof aef.X; j++){
-    //         if(aef.R[i].source != ){
-
-    //     }
-
-    //     }
-    // }
+    int lenGram=0; int count=0; int nbrel;
+    for (int i = 0; i < sizeof aef.X; i++){       
+        if(aef.X[i]!='\0'){
+            lenGram++;
+        }     
+        for (int j = 0; j < sizeof aef.R; j++){
+            if(strlen(aef.R[j].gram)!=0){
+                nbrel++;
+                if(aef.R[j].gram==aef.X[i]){
+                    count++;
+                }
+            }
+        }
+        if(lenGram!=count){
+            return false;
+        }
+    }
+    return true;
 }
 
 bool appartientAEF(struct AEF aef, char string[]){
     int currState=aef.I;
     int a=0; // in string
-    while(a != strlen(string)){
-        int check=a;
-        for (int i = 0; i < sizeof aef.R; i++){
-            if(aef.R[i].gram[0]==string[a] && aef.R[i].source==currState){
-                currState=aef.R[i].dest;
-                a++;
-                for (int j = 0; j < sizeof aef.F; j++){
+    for (int i = 0; i < sizeof aef.R; i++){
+        if(aef.R[i].gram[0]==string[a] && aef.R[i].source==currState){
+            currState=aef.R[i].dest;
+            a++;
+            for (int j = 0; j < sizeof aef.F; j++){
                 if(currState==aef.F[j]){
                     if (a==strlen(string)){
                         return true;
-                        }
-                    } 
-                }
-                
-                
-            }
-        } 
-        return false;       
-    }
+                    }
+                } 
+            }      
+        }
+    } 
+    return false;       
 }
 
 void afficherAEF(struct AEF aef){
@@ -165,7 +169,7 @@ int main(int argc, char *argv[]){
             read=true;
         }
     }
-    printf("%d\n", appartientAEF(aef, "abbaa"));
+    //printf("%d\n", appartientAEF(aef, "abb"));
     printf("%d", AEFcomplet(aef));
     fclose(fp);
     return 0;
